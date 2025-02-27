@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from 'react';
 import { Todo } from '../../types/Todo';
 import { createTodo, updateTodo, USER_ID } from '../../api/todos';
 import classNames from 'classnames';
-import { LOCAL_ID } from '../../App';
 
 interface Props {
   todos: Todo[];
@@ -41,8 +40,6 @@ export const Header: React.FC<Props> = ({
     }
   }, [isEmpty]);
 
-  // #region SWITCH_CHECKS
-
   const handleSwitchTodos = async () => {
     const active = !todos.every(todo => todo.completed);
 
@@ -69,9 +66,7 @@ export const Header: React.FC<Props> = ({
       });
     });
   };
-  // #endregion
 
-  // #region CREATE_TODO
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     hadleBlurInput();
@@ -83,15 +78,16 @@ export const Header: React.FC<Props> = ({
         userId: USER_ID,
       };
 
-      const localTodo = { ...todoWithoutId, id: LOCAL_ID };
+      const localTodo = { ...todoWithoutId, id: USER_ID };
 
       setIsAdd(true);
+      
       setTodos(prevTodos => [...prevTodos, localTodo]);
 
       createTodo(todoWithoutId)
         .then(newTodo => {
           setTodos(prevTodos =>
-            prevTodos.filter(todo => todo.id !== LOCAL_ID).concat(newTodo),
+            prevTodos.filter(todo => todo.id !== USER_ID).concat(newTodo),
           );
         })
         .catch(() => {
@@ -107,7 +103,6 @@ export const Header: React.FC<Props> = ({
 
     setTitle('');
   };
-  // #endregion
 
   return (
     <header className="todoapp__header">

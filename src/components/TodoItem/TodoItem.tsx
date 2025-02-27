@@ -3,9 +3,8 @@
 
 import classNames from 'classnames';
 import { Todo } from '../../types/Todo';
-import { deleteTodo, updateTodo } from '../../api/todos';
+import { deleteTodo, updateTodo, USER_ID } from '../../api/todos';
 import { useState } from 'react';
-import { LOCAL_ID } from '../../App';
 
 interface Props {
   todo: Todo;
@@ -32,7 +31,6 @@ export const TodoItem: React.FC<Props> = ({
   const [isEditTodo, setIsEditTodo] = useState(false);
   const [editTitle, setEditTitle] = useState(title);
 
-  // #region DELETE_TODO
   const handleDeleteTodo = async () => {
     try {
       setIsLoading(true);
@@ -48,9 +46,7 @@ export const TodoItem: React.FC<Props> = ({
       setIsLoading(false);
     }
   };
-  //#endregion
 
-  // #region EDIT_TITLE
   const handleSubmitEdit = (event?: React.FormEvent<HTMLFormElement>) => {
     event?.preventDefault();
 
@@ -80,9 +76,7 @@ export const TodoItem: React.FC<Props> = ({
 
     setIsEditTodo(false);
   };
-  // #endregion
 
-  // #region SWITCH_CHECK
   const handleSwitchCheck = () => {
     const newTodo = { ...todo, completed: !completed };
 
@@ -104,7 +98,6 @@ export const TodoItem: React.FC<Props> = ({
       });
     });
   };
-  // #endregion
 
   return (
     <div
@@ -160,7 +153,7 @@ export const TodoItem: React.FC<Props> = ({
         className={classNames('modal overlay', {
           'is-active':
             isLoading ||
-            (isAdd && LOCAL_ID === id) ||
+            (isAdd && USER_ID === id) ||
             (isChange && tempId.includes(todo.id)) ||
             (isDelete && tempId.includes(todo.id)),
         })}

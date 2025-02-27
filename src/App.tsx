@@ -6,11 +6,17 @@ import { TodoList } from './components/TodoList';
 import { Footer } from './components/Footer';
 import { Todo } from './types/Todo';
 import classNames from 'classnames';
-export const LOCAL_ID = 1000000000000;
+
+export enum Filter {
+  All = 'All',
+  Active = 'Active',
+  Completed = 'Completed',
+}
+
 
 export const App: React.FC = () => {
   const [todos, setTodos] = useState<Todo[]>([]);
-  const [filter, setFilter] = useState('All');
+  const [filter, setFilter] = useState(Filter.All);
   const [errorMessage, setErrorMessage] = useState('');
   const [isAdd, setIsAdd] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
@@ -20,14 +26,11 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     getTodos()
-      .then(data => {
-        setTodos(data);
-      })
+      .then(setTodos)
       .catch(() => {
         setErrorMessage('Unable to load todos');
       });
   }, []);
-
 
   if (!USER_ID) {
     return <UserWarning />;
@@ -41,12 +44,13 @@ export const App: React.FC = () => {
 
   const getFilteredTodos = () => {
     switch (filter) {
-      case 'Active':
-        return todos.filter(todo => !todo.completed);
-
-      case 'Completed':
-        return todos.filter(todo => todo.completed);
-
+      case Filter.Active:
+        return todos.filter((todo) => !todo.completed);
+  
+      case Filter.Completed:
+        return todos.filter((todo) => todo.completed);
+  
+      case Filter.All:
       default:
         return todos;
     }

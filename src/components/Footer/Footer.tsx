@@ -1,12 +1,13 @@
 import { Todo } from '../../types/Todo';
 import { deleteTodo } from '../../api/todos';
 import classNames from 'classnames';
+import { Filter } from '../../App';
 
 interface Props {
   todos: Todo[];
   filter: string;
   setIsDelete: (value: boolean) => void;
-  setFilter: (filter: string) => void;
+  setFilter: (filter: Filter) => void;
   setDeletedId: React.Dispatch<React.SetStateAction<number[]>>;
   setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
   setErrorMessage: (message: string) => void;
@@ -60,7 +61,7 @@ export const Footer: React.FC<Props> = ({
       </span>
 
       <nav className="filter" data-cy="Filter">
-        {['All', 'Active', 'Completed'].map(currentFilter => (
+        {Object.values(Filter).map(currentFilter => (
           <a
             href={`#/${currentFilter}`}
             className={classNames('filter__link', {
